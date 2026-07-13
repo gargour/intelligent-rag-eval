@@ -42,7 +42,7 @@ class FaissVectorStore:
         if self.store is None:
             return []
 
-        oversample = k * 3 if filter else k
+        oversample = min(k * 20, len(self.store.docstore._dict)) if filter else k
         results = self.store.similarity_search_with_relevance_scores(query, k=oversample)
 
         if filter and "document_id" in filter:
