@@ -1,0 +1,15 @@
+__pycache__/
+*.pyc
+.env
+.env.example
+data/raw/*
+data/faiss_index/*
+data/eval_datasets/*.json
+!data/raw/.gitkeep
+!data/faiss_index/.gitkeep
+venv/
+.venv/
+*.egg-info/
+.pytest_cache/
+.streamlit/
+*.log
