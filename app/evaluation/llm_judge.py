@@ -15,7 +15,6 @@ Règles de notation:
 - Utilise des valeurs intermédiaires (0.5, 0.7...) si partiellement correct"""
 
 def _extract_json(raw: str) -> dict:
-    """Extrait le premier objet JSON valide trouvé dans la réponse, même s'il y a du texte autour."""
     cleaned = raw.strip()
     cleaned = re.sub(r"^```(json)?", "", cleaned).strip()
     cleaned = re.sub(r"```$", "", cleaned).strip()
