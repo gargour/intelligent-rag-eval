@@ -1,0 +1,14 @@
+.venv/
+.git/
+__pycache__/
+*.pyc
+data/raw/*
+data/faiss_index/*
+data/processed/*
+data/eval_datasets/*
+data/embedding_cache/*
+app/evaluation/reports/*
+.env
+*.log
+.pytest_cache/
+node_modules/

@@ -17,6 +17,8 @@ services:
       dockerfile: docker/Dockerfile.api
     container_name: rag_api
     env_file: .env
+    environment:
+      DATABASE_URL: postgresql://raguser:ragpass@postgres:5432/ragdb
     ports:
       - "8000:8000"
     depends_on:
@@ -30,6 +32,8 @@ services:
       dockerfile: docker/Dockerfile.frontend
     container_name: rag_frontend
     env_file: .env
+    environment:
+      API_BASE_URL: http://api:8000
     ports:
       - "8501:8501"
     depends_on:
