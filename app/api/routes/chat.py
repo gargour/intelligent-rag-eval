@@ -6,6 +6,9 @@ from app.api.schemas.chat_schema import QueryRequest, AnswerResponse
 from app.agents.agent_router import route_request
 from app.rag.chain import run_rag_query
 import json
+from app.agents.smart_agent import run_smart_agent
+from app.api.schemas.chat_schema import SmartAgentRequest, SmartAgentResponse
+from app.db.models import Document
 
 router = APIRouter(prefix="/chat", tags=["Chat"])
 
@@ -33,3 +36,16 @@ def ask_question(request: QueryRequest, db: Session = Depends(get_db)):
 def ask_agent(mode: str, payload: dict, db: Session = Depends(get_db)):
     result = route_request(mode, **payload)
     return {"result": result}
+
+@router.post("/smart", response_model=SmartAgentResponse)
+def ask_smart_agent(request: SmartAgentRequest, db: Session = Depends(get_db)):
+    all_docs = db.query(Document).filter(Document.status == "ready").all()
+    available_documents = [{"id": d.id, "filename": d.filename} for d in all_docs]
+
+    output = run_smart_agent(
+        question=request.question,
+        available_documents=available_documents,
+        document_ids=request.document_ids,
+    )
+
+    return SmartAgentResponse(**output)

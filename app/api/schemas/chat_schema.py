@@ -19,3 +19,13 @@ class AnswerResponse(BaseModel):
     answer: str
     citations: List[Citation]
     latency_ms: int
+
+
+class SmartAgentRequest(BaseModel):
+    question: str
+    document_ids: Optional[List[str]] = None
+
+class SmartAgentResponse(BaseModel):
+    action: str
+    reasoning: str
+    result: str
