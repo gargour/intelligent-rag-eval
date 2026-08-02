@@ -38,6 +38,11 @@ jobs:
       - name: Install dependencies
         run: pip install -r requirements.txt
 
+      - name: Initialize database
+        env:
+          DATABASE_URL: postgresql://raguser:ragpass@localhost:5432/ragdb
+        run: python -c "from app.db.session import init_db; init_db()"
+
       - name: Run tests
         env:
           DATABASE_URL: postgresql://raguser:ragpass@localhost:5432/ragdb
