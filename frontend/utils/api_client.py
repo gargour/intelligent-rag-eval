@@ -35,3 +35,11 @@ def run_evaluation(document_ids: list = None, num_questions: int = 3):
     response = requests.post(f"{BASE_URL}/evaluation/run", json=payload)
     response.raise_for_status()
     return response.json()
+
+def ask_question_stream(question: str, document_ids: list = None, top_k: int = 5):
+    payload = {"question": question, "document_ids": document_ids, "top_k": top_k}
+    response = requests.post(f"{BASE_URL}/chat/ask/stream", json=payload, stream=True)
+    response.raise_for_status()
+    for chunk in response.iter_content(chunk_size=None, decode_unicode=True):
+        if chunk:
+            yield chunk
