@@ -10,8 +10,7 @@ class DocumentResponse(BaseModel):
     num_chunks: int
     status: str
 
-    class Config:
-        from_attributes = True
+    model_config = {"from_attributes": True}
 
 class DocumentUploadResponse(BaseModel):
     document_id: str

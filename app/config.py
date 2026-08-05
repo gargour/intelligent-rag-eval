@@ -31,8 +31,7 @@ class Settings(BaseSettings):
     chunk_overlap: int = 150
     top_k_retrieval: int = 5
 
-    class Config:
-        env_file = ".env"
+    model_config = {"env_file": ".env"}
 
 @lru_cache
 def get_settings() -> Settings:
