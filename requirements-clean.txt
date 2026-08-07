@@ -1,0 +1,47 @@
+# Backend
+fastapi==0.115.0
+uvicorn[standard]==0.30.6
+pydantic==2.9.2
+pydantic-settings==2.5.2
+
+# LangChain ecosystem
+langchain==0.3.30
+langchain-community==0.3.31
+langchain-openai==0.2.14
+langchain-text-splitters==0.3.11
+
+# LLM & Embeddings
+openai==1.54.4
+sentence-transformers==3.1.1
+
+# Vector store
+faiss-cpu==1.14.3
+
+# Database
+sqlalchemy==2.0.35
+psycopg2-binary==2.9.9
+
+# Document parsing
+pypdf==4.3.1
+python-docx==1.1.2
+docx2txt==0.8
+unstructured==0.15.13
+
+# Evaluation
+ragas==0.2.15
+datasets==2.21.0
+
+# Frontend
+streamlit==1.38.0
+
+# Utilities
+requests==2.32.3
+python-dotenv==1.0.1
+python-multipart==0.0.9
+
+# Testing
+pytest==8.3.3
+httpx==0.27.2
+
+# PyTorch (CPU-only, installé séparément dans Docker)
+torch==2.13.0
