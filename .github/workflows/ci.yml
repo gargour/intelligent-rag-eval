@@ -42,6 +42,10 @@ jobs:
         env:
           DATABASE_URL: postgresql://raguser:ragpass@localhost:5432/ragdb
         run: python -c "from app.db.session import init_db; init_db()"
+      - name: Security scan (pip-audit)
+        run: |
+          pip install pip-audit
+          pip-audit --desc -r requirements.txt || true
 
       - name: Run tests
         env:
