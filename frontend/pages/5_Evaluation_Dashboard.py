@@ -1,28 +1,81 @@
+import sys
+from pathlib import Path
+
+# --- Correction du PYTHONPATH pour que Python trouve le module 'app' ---
+root_dir = Path(__file__).resolve().parent.parent.parent
+if str(root_dir) not in sys.path:
+    sys.path.append(str(root_dir))
+
 import streamlit as st
-import pandas as pd
-from utils.api_client import list_documents, run_evaluation
+import requests
+from app.config import get_settings
 
-st.title("📊 Evaluation Dashboard")
+settings = get_settings()
 
-try:
-    docs = list_documents()
-    doc_options = {d["filename"]: d["id"] for d in docs}
-except Exception:
-    doc_options = {}
+# Configuration de la page Streamlit
+st.set_page_config(
+    page_title="Evaluation Dashboard",
+    page_icon="📊",
+    layout="wide"
+)
 
-selected_docs = st.multiselect("Limiter l'évaluation à des documents (optionnel)", options=list(doc_options.keys()))
-document_ids = [doc_options[name] for name in selected_docs] if selected_docs else None
+st.title("📊 Tableau de bord d'Évaluation RAG")
+st.markdown("Évaluez les performances de votre système de recherche documentaire (génération de questions/réponses, Faithfulness, Relevance).")
 
-num_questions = st.slider("Nombre de questions générées par chunk", 1, 5, 2)
+# Barre latérale pour les paramètres
+with st.sidebar:
+    st.header("⚙️ Paramètres")
+    num_questions = st.slider(
+        "Nombre de questions par chunk",
+        min_value=1,
+        max_value=10,
+        value=3,
+        help="Nombre de paires Q/R générées pour tester le dataset."
+    )
+    
+    st.divider()
+    st.info("Utilise les clés d'API Groq dédiées configurées dans le backend (.env).")
 
-if st.button("Lancer l'évaluation"):
-    with st.spinner("Évaluation en cours (peut prendre plusieurs minutes)..."):
-        result = run_evaluation(document_ids=document_ids, num_questions=num_questions)
+# URL de l'API FastAPI dans le réseau Docker
+API_URL = "http://api:8000"
 
-        col1, col2 = st.columns(2)
-        col1.metric("Faithfulness moyen", f"{result['avg_faithfulness']:.2f}")
-        col2.metric("Pertinence moyenne", f"{result['avg_answer_relevance']:.2f}")
+col1, col2 = st.columns(2)
 
-        st.subheader("Détail par question")
-        df = pd.DataFrame(result["details"])
-        st.dataframe(df)
+with col1:
+    st.subheader("🚀 Lancer le Pipeline d'Évaluation")
+    st.markdown("Lance la génération de dataset, l'interrogation du RAG et l'évaluation par le LLM-as-a-Judge.")
+    
+    if st.button("Lancer l'évaluation", type="primary"):
+        with st.spinner("Exécution de l'évaluation en cours... Patientez."):
+            try:
+                response = requests.post(
+                    f"{API_URL}/evaluation/run",
+                    json={"num_questions": num_questions},
+                    timeout=120
+                )
+                if response.status_code == 200:
+                    data = response.json()
+                    st.success("✅ Évaluation exécutée avec succès !")
+                    st.json(data)
+                else:
+                    st.error(f"❌ Erreur API ({response.status_code}) : {response.text}")
+            except requests.exceptions.ConnectionError:
+                st.error("❌ Impossible de joindre l'API backend. Vérifie que le conteneur 'api' est bien démarré.")
+            except Exception as e:
+                st.error(f- "❌ Une erreur est survenue : {str(e)}")
+
+with col2:
+    st.subheader("🔍 Vérification des Services")
+    st.markdown("Vérifie que la configuration RAGAS / Judge / Clés API est opérationnelle.")
+    
+    if st.button("Tester la connexion RAGAS"):
+        with st.spinner("Test de connexion..."):
+            try:
+                response = requests.get(f"{API_URL}/evaluation/ragas", timeout=10)
+                if response.status_code == 200:
+                    st.success("✅ Configuration RAGAS / Judge valide !")
+                    st.json(response.json())
+                else:
+                    st.error(f"❌ Erreur : {response.text}")
+            except Exception as e:
+                st.error(f"❌ Erreur de connexion au backend : {str(e)}")

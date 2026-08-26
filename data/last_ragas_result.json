@@ -1,0 +1,54 @@
+{
+  "total_questions": 5,
+  "avg_faithfulness": 1.0,
+  "avg_answer_relevancy": 0.181,
+  "avg_context_precision": 0.75,
+  "avg_context_recall": 1.0,
+  "details": [
+    {
+      "question": "Quel est le nom du président du prestataire mentionné dans le contrat de sponsoring?",
+      "answer": "Rayhanne HADDED.",
+      "ground_truth": "Rayhanne HADDED",
+      "faithfulness": 0.0,
+      "answer_relevancy": 0.181,
+      "context_precision": 0.5,
+      "context_recall": 0.0
+    },
+    {
+      "question": "Combien de minutes d'intervention le sponsor doit-il fournir le jour de l'événement ?",
+      "answer": "20 minutes.",
+      "ground_truth": "20 minutes",
+      "faithfulness": 0.0,
+      "answer_relevancy": 0.0,
+      "context_precision": 0.0,
+      "context_recall": 0.0
+    },
+    {
+      "question": "Quel est le mode de paiement indiqué dans l'article 4 du document?",
+      "answer": "Par Virement.",
+      "ground_truth": "Le paiement sera effectué en dinars tunisiens par virement.",
+      "faithfulness": 1.0,
+      "answer_relevancy": 0.0,
+      "context_precision": 0.0,
+      "context_recall": 0.0
+    },
+    {
+      "question": "Quel poste a Amr GARA occupé en 2024 ?",
+      "answer": "Vice‑président chargé de la trésorerie.",
+      "ground_truth": "Vice-président chargé de la trésorerie",
+      "faithfulness": 1.0,
+      "answer_relevancy": 0.0,
+      "context_precision": 1.0,
+      "context_recall": 1.0
+    },
+    {
+      "question": "Quel est le lieu de l'Assemblée générale extraordinaire mentionnée dans le document?",
+      "answer": "Municipalité de Ras Jebel",
+      "ground_truth": "Municipalité de Ras Jebel",
+      "faithfulness": 0.0,
+      "answer_relevancy": 0.0,
+      "context_precision": 0.0,
+      "context_recall": 0.0
+    }
+  ]
+}

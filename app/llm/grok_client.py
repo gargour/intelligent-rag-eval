@@ -5,9 +5,9 @@ from app.config import get_settings
 settings = get_settings()
 
 class GrokClient(BaseLLMClient):
-    def __init__(self):
+    def __init__(self, api_key: str = None):
         self.client = OpenAI(
-            api_key=settings.grok_api_key,
+            api_key=api_key or settings.grok_api_key,
             base_url=settings.grok_base_url,
         )
         self.model = settings.grok_model

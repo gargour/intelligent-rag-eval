@@ -1,6 +1,9 @@
 import json
 import re
-from app.llm.factory import get_llm_client
+from app.llm.grok_client import GrokClient
+from app.config import get_settings
+
+settings = get_settings()
 
 JUDGE_SYSTEM_PROMPT = """Tu es un évaluateur strict mais juste de systèmes RAG.
 Compare la réponse générée à la réponse de référence, en te basant sur le sens, pas la formulation exacte.
@@ -35,7 +38,9 @@ def _extract_json(raw: str) -> dict:
 
 
 def judge_answer(question: str, generated_answer: str, ground_truth: str, context: str) -> dict:
-    llm = get_llm_client()
+    api_key = settings.grok_api_key_judge or settings.grok_api_key
+    llm = GrokClient(api_key=api_key)
+
     prompt = f"""QUESTION: {question}
 
 CONTEXTE UTILISÉ PAR LE RAG:

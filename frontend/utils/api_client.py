@@ -43,3 +43,20 @@ def ask_question_stream(question: str, document_ids: list = None, top_k: int = 5
     for chunk in response.iter_content(chunk_size=None, decode_unicode=True):
         if chunk:
             yield chunk
+
+def run_ragas_evaluation(document_ids: list = None, num_questions: int = 1):
+    payload = {"document_ids": document_ids, "num_questions_per_doc": num_questions}
+    response = requests.post(f"{BASE_URL}/evaluation/ragas", json=payload, timeout=600)
+    response.raise_for_status()
+    return response.json()
+def check_groq_health():
+    try:
+        response = requests.get(f"{BASE_URL}/health/groq", timeout=15)
+        return response.json()
+    except Exception as e:
+        return {"status": "unreachable", "message": str(e)}
+
+def get_latest_ragas_result():
+    response = requests.get(f"{BASE_URL}/evaluation/ragas/latest", timeout=15)
+    response.raise_for_status()
+    return response.json()

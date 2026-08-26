@@ -1,4 +1,4 @@
-name: Nightly Evaluation
+name: RAGAS Evaluation
 
 on:
   schedule:
@@ -6,8 +6,23 @@ on:
   workflow_dispatch:
 
 jobs:
-  evaluate:
+  ragas-eval:
     runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: raguser
+          POSTGRES_PASSWORD: ragpass
+          POSTGRES_DB: ragdb
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
     steps:
       - uses: actions/checkout@v4
 
@@ -16,18 +31,26 @@ jobs:
         with:
           python-version: "3.11"
 
+      - name: Install PyTorch (CPU-only)
+        run: pip install torch --index-url https://download.pytorch.org/whl/cpu
+
       - name: Install dependencies
         run: pip install -r requirements.txt
 
-      - name: Run evaluation
+      - name: Run RAGAS evaluation
         env:
+          DATABASE_URL: postgresql://raguser:ragpass@localhost:5432/ragdb
           GROK_API_KEY: ${{ secrets.GROK_API_KEY }}
-          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-          DATABASE_URL: ${{ secrets.DATABASE_URL }}
-        run: python scripts/run_evaluation.py
+          GROK_MODEL: llama-3.3-70b-versatile
+          GROK_BASE_URL: https://api.groq.com/openai/v1
+          LLM_PROVIDER: grok
+          EMBEDDING_PROVIDER: sentence-transformers
+          VECTORSTORE_PROVIDER: faiss
+          FAISS_INDEX_DIR: ./data/faiss_index
+        run: python scripts/run_ragas_ci.py
 
-      - name: Upload eval report
+      - name: Upload RAGAS report
         uses: actions/upload-artifact@v4
         with:
-          name: eval-report
-          path: app/evaluation/reports/
+          name: ragas-report
+          path: ragas_report.json

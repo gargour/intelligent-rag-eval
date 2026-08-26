@@ -4,7 +4,9 @@ from functools import lru_cache
 class Settings(BaseSettings):
     # LLM - Grok
     grok_api_key: str = ""
-    grok_model: str = "grok-4"
+    grok_api_key_ragas: str = ""
+    grok_api_key_judge: str = ""
+    grok_model: str = "openai/gpt-oss-20b"
     grok_base_url: str = "https://api.x.ai/v1"
     llm_provider: str = "grok"
 

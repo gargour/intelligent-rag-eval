@@ -7,16 +7,19 @@ from app.config import get_settings
 settings = get_settings()
 
 def get_ragas_llm():
-    """LLM utilisé par RAGAS (via Groq, compatible OpenAI), enveloppé pour RAGAS 0.2+."""
+    """LLM utilisé par RAGAS — clé Groq dédiée."""
+    # Correction ici pour utiliser la clé dédiée RAGAS
+    ragas_key = settings.grok_api_key_ragas or settings.grok_api_key
+    
     llm = ChatOpenAI(
         model=settings.grok_model,
-        api_key=settings.grok_api_key,
+        api_key=ragas_key,
         base_url=settings.grok_base_url,
         temperature=0,
+        request_timeout=60,
     )
     return LangchainLLMWrapper(llm)
 
 def get_ragas_embeddings():
-    """Embeddings utilisés par RAGAS, enveloppés pour RAGAS 0.2+."""
     embeddings = HuggingFaceEmbeddings(model_name="sentence-transformers/all-MiniLM-L6-v2")
     return LangchainEmbeddingsWrapper(embeddings)
