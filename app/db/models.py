@@ -59,4 +59,14 @@ class EvalResult(Base):
     context_precision = Column(Float)
     context_recall = Column(Float)
     created_at = Column(DateTime, default=datetime.utcnow)
+
+# --- Ajout pour l'historique des évaluations ---
+class EvaluationResultModel(Base):
+    __tablename__ = "evaluation_results"
+
+    id = Column(Integer, primary_key=True, index=True)
+    evaluation_name = Column(String, index=True)
+    faithfulness = Column(Float)
+    relevance = Column(Float)
+    created_at = Column(DateTime, default=datetime.utcnow)
     
