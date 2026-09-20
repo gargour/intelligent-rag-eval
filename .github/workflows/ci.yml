@@ -41,7 +41,9 @@ jobs:
       - name: Initialize database
         env:
           DATABASE_URL: postgresql://raguser:ragpass@localhost:5432/ragdb
+          PYTHONPATH: .
         run: python -c "from app.db.session import init_db; init_db()"
+
       - name: Security scan (pip-audit)
         run: |
           pip install pip-audit
@@ -57,4 +59,5 @@ jobs:
           EMBEDDING_PROVIDER: sentence-transformers
           VECTORSTORE_PROVIDER: faiss
           FAISS_INDEX_DIR: ./data/faiss_index
+          PYTHONPATH: .
         run: pytest -v
