@@ -47,7 +47,7 @@ jobs:
           EMBEDDING_PROVIDER: sentence-transformers
           VECTORSTORE_PROVIDER: faiss
           FAISS_INDEX_DIR: ./data/faiss_index
-        run: python scripts/run_ragas_ci.py
+        run: python -m scripts.run_ragas_ci
 
       - name: Upload RAGAS report
         uses: actions/upload-artifact@v4
